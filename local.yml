@@ -1,0 +1,53 @@
+version: '3'
+
+volumes:
+  discover_records_local_postgres_data: {}
+  discover_records_local_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: discover_records_local_django
+    container_name: discover_records_local_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8000:8000'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: discover_records_production_postgres
+    container_name: discover_records_local_postgres
+    volumes:
+      - discover_records_local_postgres_data:/var/lib/postgresql/data
+      - discover_records_local_postgres_data_backups:/backups
+    ports:
+      - '1111:5432'
+    env_file:
+      - ./.envs/.local/.postgres
+
+  docs:
+    image: discover_records_local_docs
+    container_name: discover_records_local_docs
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./discover_records:/app/discover_records:z
+    ports:
+      - '9000:9000'
+    command: /start-docs
