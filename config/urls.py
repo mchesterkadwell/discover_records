@@ -17,7 +17,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("record/", views.record, name="record-form"),
-    path("record/view/<rid>", views.record_view, name="record-view"),
+    path("record/view/<record_id>", views.record_view, name="record-view"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

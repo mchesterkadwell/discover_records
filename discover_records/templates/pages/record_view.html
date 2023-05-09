@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Record: {{ record.id }}</h1>
+
+  {% if record.title %}
+    <p><strong>Title:</strong> {{ record.title }}</p>
+  {% elif record.scope_content_description %}
+    <p><strong>Scope Content Description:</strong> {{ record.scope_content_description }}</p>
+  {% elif record.citable_reference %}
+    <p><strong>Citable Reference:</strong> {{ record.citable_reference }}</p>
+  {% else %}
+    <p><strong>Not sufficient information</strong></p>
+  {% endif %}
+
+{% endblock %}

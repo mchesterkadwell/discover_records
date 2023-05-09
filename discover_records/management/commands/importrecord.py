@@ -77,6 +77,6 @@ class Command(BaseCommand):
         try:
             r = Record(**mini_record._asdict())
             r.save()
-            self.stdout.write(self.style.SUCCESS('Wrote record "%s" to database.' % record_id))
+            self.stdout.write(self.style.SUCCESS('Added record "%s" to database.' % record_id))
         except (ValueError, DatabaseError) as err:
             raise CommandError(err)

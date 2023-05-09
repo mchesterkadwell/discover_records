@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+      {% block content %}
+
+        <form method="post">
+          {% csrf_token %}
+          <p>Retrieve some information about a National Archives record.</p>
+          {{ form.as_p }}
+          <input class="button" type="submit" value="Get Record">
+        </form>
+
+      {% endblock content %}
