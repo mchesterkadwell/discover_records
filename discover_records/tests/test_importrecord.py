@@ -80,4 +80,4 @@ class TestCommandIntegration:
         record_id = "a147aa58-38c5-45fb-a340-4a348efa01e6"
         call_command("importrecord", record_id)
         msg = capsys.readouterr().out
-        assert msg == f'Wrote record "{record_id}" to database.\n'
+        assert msg == f'Added record "{record_id}" to database.\n'
