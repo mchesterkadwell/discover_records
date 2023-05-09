@@ -7,48 +7,77 @@ Retrieve and present records from The National Archives Discovery API.
 
 License: MIT
 
-## Settings
+## Introduction
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+The National Archives Discovery API (https://discovery.nationalarchives.gov.uk/API) is a web API for accessing records
+in JSON format.
 
-## Basic Commands
+The 'Discover Records' Django app provides a web interface to retrieve a record by id from the Discovery API, insert
+it into the database and view some information about the record.
 
-### Setting Up Your Users
+### Notes
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+- This is an example app that should _not_ be run in production. The management command 'importrecord', which has direct access to the database, is available without authentication. Input and data validation are also minimal.
+- A typical app of this kind would benefit from `pydantic` for data validation and should utilise type annotations with `mypy` to help prevent bugs.
+- It has been assumed that the user will have knowledge of valid record ids.
+- A minimal subset of record data has been written to the model in the interests of time to meet the minimum specifications.
+- TDD was used for the management command 'importrecord' but there was insufficient time to write tests for web elements such as `views.py`. Overall test coverage, as measured by `coverage`, is 85%.
 
-- To create a **superuser account**, use this command:
+## Quick Start
 
-      $ python manage.py createsuperuser
+Here are the steps to run the Django app locally in development mode.
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+### Prerequisites
 
-### Type checks
+This application runs in containers on Docker with Docker Compose. You should have installed Docker and Docker Compose.
 
-Running type checks with mypy:
+### Build the Code
 
-    $ mypy discover_records
+Clone this repository:
 
-### Test coverage
+`$ git clone https://github.com/mchesterkadwell/discover_records.git`
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
+Build the Docker stack with the local configuration. This make take a few minutes:
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
+`$ docker compose -f local.yml build`
 
-#### Running tests with pytest
+### Run the Application
 
-    $ pytest
+Run the Docker stack with the local configuration:
 
-### Live reloading and Sass CSS compilation
+`$ docker-compose -f local.yml up`
 
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
+Run the database migrations. They should run on startup, but just in case you can do it manually:
 
-## Deployment
+`$ docker compose -f local.yml run --rm django python manage.py migrate`
 
-The following details how to deploy this application.
+Create a superuser. It is not important what you choose here as we do not use authentication in the application:
 
-### Docker
+`$ docker compose -f local.yml run --rm django python manage.py createsuperuser`
 
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+You can view the web application locally at: http://localhost:8000/record/
+
+It is possible to run the management command 'importrecord' manually without the web UI. Replace `<id>` with the id
+of the TNA record you wish to retrieve and add to the database.
+
+`$ docker compose -f local.yml run --rm django python manage.py importrecord <id>`
+
+### Run the Tests
+
+To run the tests:
+
+`$ docker-compose -f local.yml run --rm django pytest`
+
+## Use the Application
+
+Go to http://localhost:8000/record/ and input a TNA record id into the field and press the 'Get Record' button.
+
+![](readme/enter-record-id.png)
+
+If the app can successfully retrieve the record it redirects to a page to show some information about the record.
+
+![](readme/record-added.png)
+
+If the id is not valid, so the Discovery API cannot retrieve a record, an error message is shown.
+
+![](readme/invalid-id-error.png)
