@@ -40,7 +40,11 @@ def minify_record(record):
     """Reduce the fields of a TNA record to match the Record model."""
     if not record["id"]:
         raise NoIdInRecord
-    desc = record["scopeContent"]["description"] if record["scopeContent"] else ""
+    desc = (
+        record["scopeContent"]["description"]
+        if record["scopeContent"] and record["scopeContent"]["description"]
+        else ""
+    )
     title = record["title"] if record["title"] else ""
     ref = record["citableReference"] if record["citableReference"] else ""
     return MiniRecord(record["id"], title, desc, ref)

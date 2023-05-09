@@ -53,8 +53,12 @@ class TestMinifyRecord:
     def test_none_value_converts_to_empty_string(self, tna_record_example_json):
         record_none_value = tna_record_example_json.copy()
         record_none_value["title"] = None
+        record_none_value["scopeContent"]["description"] = None
+        record_none_value["citableReference"] = None
         mini_record = minify_record(record_none_value)
         assert mini_record.title == ""
+        assert mini_record.scope_content_description == ""
+        assert mini_record.citable_reference == ""
 
     def test_missing_id_key_raises_exception(self, tna_record_example_missing_optional_fields):
         record_missing_id = tna_record_example_missing_optional_fields.copy()
