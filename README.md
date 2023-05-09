@@ -45,7 +45,7 @@ Build the Docker stack with the local configuration. This make take a few minute
 
 Run the Docker stack with the local configuration:
 
-`$ docker-compose -f local.yml up`
+`$ docker compose -f local.yml up`
 
 Run the database migrations. They should run on startup, but just in case you can do it manually:
 
@@ -66,11 +66,11 @@ of the TNA record you wish to retrieve and add to the database.
 
 To run the tests:
 
-`$ docker-compose -f local.yml run --rm django pytest`
+`$ docker compose -f local.yml run --rm django pytest`
 
 ## Use the Application
 
-Go to http://localhost:8000/record/ and input a TNA record id into the field and press the 'Get Record' button.
+Go to http://localhost:8000/record/ and input a TNA record id into the field and press the 'Get Record' button. For example, you can try `dfac0f8a-ee10-4928-a501-80ed71ea1a8a`.
 
 ![](readme/enter-record-id.png)
 
